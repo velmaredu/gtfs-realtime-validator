@@ -19,25 +19,21 @@ package edu.usf.cutr.gtfsrtvalidator.lib.model;
 import com.google.transit.realtime.GtfsRealtime;
 import com.googlecode.protobuf.format.JsonFormat;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 @XmlRootElement
 @Entity
-@NamedNativeQueries ({
-    @NamedNativeQuery (name = "feedMessageByIterationId",
-            query = "SELECT feedProtobuf AS feedMessage " +
-                    "FROM GtfsRtFeedIteration " +
-                    "WHERE IterationID = :iterationId ",
-            resultClass = ViewFeedMessageModel.class),
-    @NamedNativeQuery (name = "feedMessageByGtfsRtId",
-            query = "SELECT feedProtobuf AS feedMessage " +
-                    "FROM GtfsRtFeedIteration " +
-                    "WHERE rtFeedId = :gtfsRtId  ORDER BY IterationTimestamp DESC",
-            resultClass = ViewFeedMessageModel.class)
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "feedMessageByIterationId", query = "SELECT feedProtobuf AS feedMessage " +
+                "FROM GtfsRtFeedIteration " +
+                "WHERE IterationID = :iterationId ", resultClass = ViewFeedMessageModel.class),
+        @NamedNativeQuery(name = "feedMessageByGtfsRtId", query = "SELECT feedProtobuf AS feedMessage " +
+                "FROM GtfsRtFeedIteration " +
+                "WHERE rtFeedId = :gtfsRtId  ORDER BY IterationTimestamp DESC", resultClass = ViewFeedMessageModel.class)
 })
 public class ViewFeedMessageModel {
 
@@ -68,6 +64,7 @@ public class ViewFeedMessageModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.jsonFeedMessage = JsonFormat.printToString(feedMessage);
+        JsonFormat jsonFormat = new JsonFormat();
+        this.jsonFeedMessage = jsonFormat.printToString(feedMessage);
     }
 }

@@ -18,10 +18,10 @@
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
 import javax.annotation.concurrent.Immutable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -38,22 +38,22 @@ public class ViewMessageDetailsModel implements Serializable {
     public static final String ELEMENT_PATH = "elementPath";
     public static final String ELEMENT_VALUE = "elementValue";
 
-    @Column(name="feedProtobuf")
+    @Column(name = "feedProtobuf")
     private byte[] feedProtobuf;
-    @Column(name="messageID")
+    @Column(name = "messageID")
     private int messageId;
     @Id
-    @Column(name="IterationID")
+    @Column(name = "IterationID")
     private int iterationId;
-    @Column(name="errorID")
+    @Column(name = "errorID")
     private String errorId;
-    @Column(name="errorDescription")
+    @Column(name = "errorDescription")
     private String errorDescription;
-    @Column(name="occurrenceID")
+    @Column(name = "occurrenceID")
     private int occurrenceId;
-    @Column(name="elementPath")
+    @Column(name = "elementPath")
     private String elementPath;
-    @Column(name="elementValue")
+    @Column(name = "elementValue")
     private String elementValue;
 
     public int getMessageId() {

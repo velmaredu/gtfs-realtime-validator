@@ -16,31 +16,29 @@
  */
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedNativeQuery;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedNativeQuery;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @Entity
-@NamedNativeQuery(name = "IterationIdErrors",
-        query = "SELECT ROWNUM() AS rowId, occurrenceId, " +
-                    "errorId, title, occurrencePrefix, occurrenceSuffix " +
-                "FROM Error " +
-                "INNER JOIN " +
-                    "(SELECT messageId, errorId, prefix AS occurrencePrefix, occurrenceId " +
-                    "FROM " +
-                    "Occurrence " +
-                    "INNER JOIN " +
-                        "(SELECT messageId, errorId " +
-                        "FROM MessageLog " +
-                        "WHERE iterationId = :iterationId) MessageLogIteration " +
-                    "ON Occurrence.messageId = MessageLogIteration.messageId " +
-                    "WHERE messageId = :messageId ) OccurrenceList " +
-                "ON Error.errorId = OccurrenceList.errorId " +
-                "ORDER BY occurrenceId ",
-        resultClass = ViewIterationErrorsModel.class)
+@NamedNativeQuery(name = "IterationIdErrors", query = "SELECT ROWNUM() AS rowId, occurrenceId, " +
+        "errorId, title, occurrencePrefix, occurrenceSuffix " +
+        "FROM Error " +
+        "INNER JOIN " +
+        "(SELECT messageId, errorId, prefix AS occurrencePrefix, occurrenceId " +
+        "FROM " +
+        "Occurrence " +
+        "INNER JOIN " +
+        "(SELECT messageId, errorId " +
+        "FROM MessageLog " +
+        "WHERE iterationId = :iterationId) MessageLogIteration " +
+        "ON Occurrence.messageId = MessageLogIteration.messageId " +
+        "WHERE messageId = :messageId ) OccurrenceList " +
+        "ON Error.errorId = OccurrenceList.errorId " +
+        "ORDER BY occurrenceId ", resultClass = ViewIterationErrorsModel.class)
 public class ViewIterationErrorsModel {
 
     @Id

@@ -17,52 +17,53 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
 @Entity
-@NamedNativeQuery(name = "ErrorLogByrtfeedID",
-        query = // Retrieve the remaining columns, title and severity from Error and FinalResult tables on matching errorIds.
-                "SELECT rowIdentifier, :gtfsRtId1 AS rtFeedID, errorId AS id, " +
-                    "Error.title, Error.severity, iterationId, occurrence, loggingTime " +
-                "FROM Error " +
-                "INNER JOIN " +
-                    // Retrieve the other required column errorId on matching iterationId from MessageLog and UniqueRowIdResult tables.
-                    "(SELECT rowIdentifier, errorId, iterationId, " +
-                        "occurrence, loggingTime " +
-                    "FROM MessageLog " +
-                        "INNER JOIN " +
-                        // Retrieve ROWNUM here.
-                        "(SELECT ROWNUM() AS rowIdentifier, " +
-                            "IterationID AS iterationId, " +
-                            "feedTimestamp AS occurrence, " +
-                            "IterationTimestamp AS loggingTime " +
-                        "FROM " +
-                            // Retrieve unique IteraionID and IterationTimestamp to get ROWNUM in sequential order.
-                            "(SELECT DISTINCT errorLog.IterationID, errorLog.IterationTimestamp, errorLog.feedTimestamp " +
-                            "FROM " +
-                                "(SELECT GtfsRtFeedIDIteration.IterationID, " +
-                                    "GtfsRtFeedIDIteration.IterationTimestamp, " +
-                                    "GtfsRtFeedIDIteration.feedTimestamp " +
-                                "FROM MessageLog " +
-                                    "INNER JOIN " +
-                                    "(SELECT  IterationID, IterationTimestamp, feedTimestamp " +
-                                    "FROM GtfsRtFeedIteration " +
-                                    "WHERE rtFeedID = :gtfsRtId2) GtfsRtFeedIDIteration " +
-                                    "ON MessageLog.iterationID = GtfsRtFeedIDIteration.IterationID " +
-                                        "AND IterationTimestamp >= :sessionStartTime AND IterationTimestamp <= :sessionEndTime " +
-                                ") errorLog " +
-                            "ORDER BY IterationID " +
-                            ") " +
-                        ") UniqueRowIdResult " +
-                        "ON MessageLog.iterationId = UniqueRowIdResult.iterationId " +
-                    ") FinalResult " +
-                "ON Error.errorID = FinalResult.errorId " +
-                "WHERE Error.errorID NOT IN (:errorIds) " +
-                "ORDER BY iterationId DESC, id ",
-        resultClass = ViewErrorLogModel.class)
+@NamedNativeQuery(name = "ErrorLogByrtfeedID", query = // Retrieve the remaining columns, title and severity from Error
+                                                       // and FinalResult tables on matching errorIds.
+"SELECT rowIdentifier, :gtfsRtId1 AS rtFeedID, errorId AS id, " +
+        "Error.title, Error.severity, iterationId, occurrence, loggingTime " +
+        "FROM Error " +
+        "INNER JOIN " +
+        // Retrieve the other required column errorId on matching iterationId from
+        // MessageLog and UniqueRowIdResult tables.
+        "(SELECT rowIdentifier, errorId, iterationId, " +
+        "occurrence, loggingTime " +
+        "FROM MessageLog " +
+        "INNER JOIN " +
+        // Retrieve ROWNUM here.
+        "(SELECT ROWNUM() AS rowIdentifier, " +
+        "IterationID AS iterationId, " +
+        "feedTimestamp AS occurrence, " +
+        "IterationTimestamp AS loggingTime " +
+        "FROM " +
+        // Retrieve unique IteraionID and IterationTimestamp to get ROWNUM in sequential
+        // order.
+        "(SELECT DISTINCT errorLog.IterationID, errorLog.IterationTimestamp, errorLog.feedTimestamp " +
+        "FROM " +
+        "(SELECT GtfsRtFeedIDIteration.IterationID, " +
+        "GtfsRtFeedIDIteration.IterationTimestamp, " +
+        "GtfsRtFeedIDIteration.feedTimestamp " +
+        "FROM MessageLog " +
+        "INNER JOIN " +
+        "(SELECT  IterationID, IterationTimestamp, feedTimestamp " +
+        "FROM GtfsRtFeedIteration " +
+        "WHERE rtFeedID = :gtfsRtId2) GtfsRtFeedIDIteration " +
+        "ON MessageLog.iterationID = GtfsRtFeedIDIteration.IterationID " +
+        "AND IterationTimestamp >= :sessionStartTime AND IterationTimestamp <= :sessionEndTime " +
+        ") errorLog " +
+        "ORDER BY IterationID " +
+        ") " +
+        ") UniqueRowIdResult " +
+        "ON MessageLog.iterationId = UniqueRowIdResult.iterationId " +
+        ") FinalResult " +
+        "ON Error.errorID = FinalResult.errorId " +
+        "WHERE Error.errorID NOT IN (:errorIds) " +
+        "ORDER BY iterationId DESC, id ", resultClass = ViewErrorLogModel.class)
 public class ViewErrorLogModel implements Serializable {
 
     @Column(name = "rowIdentifier")

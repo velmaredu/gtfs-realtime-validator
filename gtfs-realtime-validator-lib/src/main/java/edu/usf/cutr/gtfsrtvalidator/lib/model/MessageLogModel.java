@@ -17,24 +17,25 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.*;
 import java.io.Serializable;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @Entity
-@Table(name="MessageLog")
+@Table(name = "MessageLog")
 public class MessageLogModel implements Serializable {
 
-    public MessageLogModel(){};
+    public MessageLogModel() {
+    };
 
     public MessageLogModel(ValidationRule validationRule) {
         this.setValidationRule(validationRule);
     }
 
     @Id
-    @Column(name="messageID")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "messageID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int messageId;
     @ManyToOne
     @JoinColumn(name = "iterationID")

@@ -19,13 +19,14 @@ package edu.usf.cutr.gtfsrtvalidator.lib.model.combined;
 
 import edu.usf.cutr.gtfsrtvalidator.lib.model.GtfsRtFeedIterationString;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement
 public class CombinedIterationMessageModel {
 
-    public CombinedIterationMessageModel() {}
+    public CombinedIterationMessageModel() {
+    }
 
     private GtfsRtFeedIterationString gtfsFeedIterationModel;
     private List<CombinedMessageOccurrenceModel> messageOccurrenceList;
@@ -54,4 +55,3 @@ public class CombinedIterationMessageModel {
                 '}';
     }
 }
-

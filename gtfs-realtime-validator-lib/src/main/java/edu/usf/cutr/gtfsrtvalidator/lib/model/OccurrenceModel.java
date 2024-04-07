@@ -17,13 +17,13 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
 @Entity
-@Table(name="Occurrence")
+@Table(name = "Occurrence")
 public class OccurrenceModel implements Serializable {
 
     public OccurrenceModel(String prefix) {
@@ -34,8 +34,8 @@ public class OccurrenceModel implements Serializable {
     }
 
     @Id
-    @Column(name="occurrenceID")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "occurrenceID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int occurrenceId;
 
     @ManyToOne
@@ -43,15 +43,18 @@ public class OccurrenceModel implements Serializable {
     private MessageLogModel messageLogModel;
 
     /**
-     * This is used along with ValidationRule.occurrenceSuffix to create a description of this occurrence of an error/warning.
+     * This is used along with ValidationRule.occurrenceSuffix to create a
+     * description of this occurrence of an error/warning.
      * <p>
-     * For example, for E004 "GTFS-rt trip_ids must appear in GTFS data", the error message we want to show the user could be
+     * For example, for E004 "GTFS-rt trip_ids must appear in GTFS data", the error
+     * message we want to show the user could be
      * "trip_id 6234 doesn't appear in the GTFS data"
      * <p>
      * For this message, the prefix would be:
      * "trip_id 6234"
      * <p>
-     * And the second part of the text (stored in ValidationRule.occurrenceSuffix) would be:
+     * And the second part of the text (stored in ValidationRule.occurrenceSuffix)
+     * would be:
      * "doesn't appear in the GTFS data"
      *
      * @see ValidationRule

@@ -17,8 +17,8 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
@@ -26,25 +26,26 @@ import java.io.Serializable;
 @Table(name = "GtfsRtFeed")
 public class GtfsRtFeedModel implements Serializable {
 
-    @Column(name="feedURL")
+    @Column(name = "feedURL")
     private String gtfsRtUrl;
     @ManyToOne
     @JoinColumn(name = "gtfsFeedID")
     private GtfsFeedModel gtfsFeedModel;
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="rtFeedID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "rtFeedID")
     private int gtfsRtId;
     @Transient
     private boolean enableShapes;
 
-    public GtfsRtFeedModel(){}
+    public GtfsRtFeedModel() {
+    }
 
-    public String getGtfsRtUrl () {
+    public String getGtfsRtUrl() {
         return gtfsRtUrl;
     }
 
-    public void setGtfsRtUrl (String gtfsRtUrl) {
+    public void setGtfsRtUrl(String gtfsRtUrl) {
         this.gtfsRtUrl = gtfsRtUrl;
     }
 
@@ -68,7 +69,7 @@ public class GtfsRtFeedModel implements Serializable {
         return enableShapes;
     }
 
-    public void setEnableShapes (boolean enableShapes) {
+    public void setEnableShapes(boolean enableShapes) {
         this.enableShapes = enableShapes;
     }
 

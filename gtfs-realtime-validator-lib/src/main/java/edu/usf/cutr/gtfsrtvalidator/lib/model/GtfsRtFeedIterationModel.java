@@ -17,8 +17,8 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
@@ -26,9 +26,11 @@ import java.io.Serializable;
 @Table(name = "GtfsRtFeedIteration")
 public class GtfsRtFeedIterationModel implements Serializable {
 
-    public GtfsRtFeedIterationModel() {}
+    public GtfsRtFeedIterationModel() {
+    }
 
-    public GtfsRtFeedIterationModel(long timeStamp, long feedTimestamp, byte[] feedprotobuf, GtfsRtFeedModel gtfsRtFeedModel, byte[] feedHash) {
+    public GtfsRtFeedIterationModel(long timeStamp, long feedTimestamp, byte[] feedprotobuf,
+            GtfsRtFeedModel gtfsRtFeedModel, byte[] feedHash) {
         this.timeStamp = timeStamp;
         this.feedTimestamp = feedTimestamp;
         this.feedprotobuf = feedprotobuf;
@@ -37,14 +39,14 @@ public class GtfsRtFeedIterationModel implements Serializable {
     }
 
     @Id
-    @Column(name="IterationID")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "IterationID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int IterationId;
-    @Column(name="IterationTimestamp")
+    @Column(name = "IterationTimestamp")
     private long timeStamp;
     @Column(name = "feedTimestamp")
     private long feedTimestamp;
-    @Column(name="feedProtobuf")
+    @Column(name = "feedProtobuf")
     @Lob
     private byte[] feedprotobuf;
     @ManyToOne
@@ -54,8 +56,10 @@ public class GtfsRtFeedIterationModel implements Serializable {
     private byte[] feedHash;
 
     /*
-     * '@Transient' does not persist 'dateFormat' to the database i.e., 'dateFormat' is not added as a column in this table.
-     * If 'dateFormat' is set, it contains the date format representation of 'feedTimestamp'.
+     * '@Transient' does not persist 'dateFormat' to the database i.e., 'dateFormat'
+     * is not added as a column in this table.
+     * If 'dateFormat' is set, it contains the date format representation of
+     * 'feedTimestamp'.
      */
     @Transient
     private String dateFormat;
