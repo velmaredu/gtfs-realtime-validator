@@ -55,7 +55,7 @@ public class BackgroundTask implements Runnable {
 
     private static Map<Integer, GtfsRealtime.FeedMessage> mGtfsRtFeedMap = new ConcurrentHashMap<>();
     private static Map<Integer, GtfsMetadata> mGtfsMetadata = new ConcurrentHashMap<>();
-    private final static List<FeedEntityValidator> mValidationRules = new ArrayList<>();
+    private static final List<FeedEntityValidator> mValidationRules = new ArrayList<>();
 
     private GtfsRtFeedModel mCurrentGtfsRtFeed = null;
 
@@ -89,12 +89,14 @@ public class BackgroundTask implements Runnable {
             GtfsMetadata gtfsMetadata;
             // Holds data needed in the database under each iteration
             GtfsRtFeedIterationModel feedIteration;
-            StringBuffer consoleOutput = new StringBuffer();
-            
-            // Get the GTFS feed from the GtfsDaoMap using the gtfsFeedId of the current feed.
+            StringBuilder consoleOutput = new StringBuilder();
+
+            // Get the GTFS feed from the GtfsDaoMap using the gtfsFeedId of the current
+            // feed.
             gtfsData = GtfsFeed.GtfsDaoMap.get(mCurrentGtfsRtFeed.getGtfsFeedModel().getFeedId());
             // Create the GTFS metadata if it doesn't already exist
-            // TODO - read ignoreShapes from website checkbox - see https://github.com/CUTR-at-USF/gtfs-realtime-validator/issues/286
+            // TODO - read ignoreShapes from website checkbox - see
+            // https://github.com/CUTR-at-USF/gtfs-realtime-validator/issues/286
             gtfsMetadata = mGtfsMetadata.computeIfAbsent(mCurrentGtfsRtFeed.getGtfsFeedModel().getFeedId(),
                     k -> new GtfsMetadata(mCurrentGtfsRtFeed.getGtfsFeedModel().getGtfsUrl(),
                             TimeZone.getTimeZone(mCurrentGtfsRtFeed.getGtfsFeedModel().getAgency()),
@@ -115,10 +117,12 @@ public class BackgroundTask implements Runnable {
                 // Get the GTFS-RT feedMessage for this method
                 long startHttpRequest = System.nanoTime();
                 InputStream in = gtfsRtFeedUrl.openStream();
-                consoleOutput.append("\n" + mCurrentGtfsRtFeed.getGtfsRtUrl() + " gtfsRtFeedUrl.openStream() in " + getElapsedTimeString(getElapsedTime(startHttpRequest, System.nanoTime())));
+                consoleOutput.append("\n" + mCurrentGtfsRtFeed.getGtfsRtUrl() + " gtfsRtFeedUrl.openStream() in "
+                        + getElapsedTimeString(getElapsedTime(startHttpRequest, System.nanoTime())));
                 long startToByteArray = System.nanoTime();
                 byte[] gtfsRtProtobuf = IOUtils.toByteArray(in);
-                consoleOutput.append("\n" + mCurrentGtfsRtFeed.getGtfsRtUrl() + " IOUtils.toByteArray(in) in " + getElapsedTimeString(getElapsedTime(startToByteArray, System.nanoTime())));
+                consoleOutput.append("\n" + mCurrentGtfsRtFeed.getGtfsRtUrl() + " IOUtils.toByteArray(in) in "
+                        + getElapsedTimeString(getElapsedTime(startToByteArray, System.nanoTime())));
 
                 boolean isUniqueFeed = true;
                 MessageDigest md = MessageDigest.getInstance("MD5");
@@ -136,30 +140,34 @@ public class BackgroundTask implements Runnable {
                     prevFeedDigest = feedIteration.getFeedHash();
                 }
 
-                if(MessageDigest.isEqual(currentFeedDigest, prevFeedDigest)) {
-                    // If previous feed digest and newly fetched/current feed digest are equal means, we received the same feed again.
+                if (MessageDigest.isEqual(currentFeedDigest, prevFeedDigest)) {
+                    // If previous feed digest and newly fetched/current feed digest are equal
+                    // means, we received the same feed again.
                     isUniqueFeed = false;
                 }
 
                 long startProtobufDecode = System.nanoTime();
                 currentFeedMessage = GtfsRealtime.FeedMessage.parseFrom(gtfsRtProtobuf);
-                consoleOutput.append("\n" + mCurrentGtfsRtFeed.getGtfsRtUrl() + " protobuf decode in " + getElapsedTimeString(getElapsedTime(startProtobufDecode, System.nanoTime())));
+                consoleOutput.append("\n" + mCurrentGtfsRtFeed.getGtfsRtUrl() + " protobuf decode in "
+                        + getElapsedTimeString(getElapsedTime(startProtobufDecode, System.nanoTime())));
                 _log.info(consoleOutput.toString());
-                consoleOutput.setLength(0);  // Clear the buffer for the next set of log statements
+                consoleOutput.setLength(0); // Clear the buffer for the next set of log statements
 
                 long feedTimestamp = TimeUnit.SECONDS.toMillis(currentFeedMessage.getHeader().getTimestamp());
 
                 // Create new feedIteration object and save the iteration to the database
-                if(isUniqueFeed) {
+                if (isUniqueFeed) {
                     if (feedIteration != null && feedIteration.getFeedprotobuf() != null) {
                         // Get the previous feed message
                         InputStream previousIs = new ByteArrayInputStream(feedIteration.getFeedprotobuf());
                         previousFeedMessage = GtfsRealtime.FeedMessage.parseFrom(previousIs);
                     }
 
-                    feedIteration = new GtfsRtFeedIterationModel(System.currentTimeMillis(), feedTimestamp, gtfsRtProtobuf, mCurrentGtfsRtFeed, currentFeedDigest);
+                    feedIteration = new GtfsRtFeedIterationModel(System.currentTimeMillis(), feedTimestamp,
+                            gtfsRtProtobuf, mCurrentGtfsRtFeed, currentFeedDigest);
                 } else {
-                    feedIteration = new GtfsRtFeedIterationModel(System.currentTimeMillis(), feedTimestamp, null, mCurrentGtfsRtFeed, currentFeedDigest);
+                    feedIteration = new GtfsRtFeedIterationModel(System.currentTimeMillis(), feedTimestamp, null,
+                            mCurrentGtfsRtFeed, currentFeedDigest);
                 }
                 session.save(feedIteration);
                 GTFSDB.commitAndCloseSession(session);
@@ -187,13 +195,15 @@ public class BackgroundTask implements Runnable {
 
             GTFSDB.closeSession(session);
 
-            while (!mGtfsRtFeedMap.keySet().containsAll(gtfsRtFeedModelList.stream().map(GtfsRtFeedModel::getGtfsRtId).collect(Collectors.toSet()))) {
+            while (!mGtfsRtFeedMap.keySet().containsAll(
+                    gtfsRtFeedModelList.stream().map(GtfsRtFeedModel::getGtfsRtId).collect(Collectors.toSet()))) {
                 Thread.sleep(200);
             }
             GtfsRealtime.FeedHeader header = null;
 
-            if (gtfsRtFeedModelList.size() < 1) {
-                _log.error("The URL '" + gtfsRtFeedUrl + "' is not stored properly into the database");
+            if (gtfsRtFeedModelList.isEmpty()) {
+                String consoleMessage = "The URL '" + gtfsRtFeedUrl + "' is not stored properly into the database";
+                _log.error(consoleMessage);
                 return;
             }
 
@@ -209,8 +219,10 @@ public class BackgroundTask implements Runnable {
             }
 
             if (gtfsRtFeedModelList.size() > 1) {
-                // We're monitoring multiple GTFS-rt feeds for the same GTFS data - create a combined feed message include all entities for all of those GTFS-rt feeds
-                _log.debug("Creating combined feed message for " + gtfsRtFeedModelList.toString());
+                // We're monitoring multiple GTFS-rt feeds for the same GTFS data - create a
+                // combined feed message include all entities for all of those GTFS-rt feeds
+                String consoleMessage = "Creating combined feed message for " + gtfsRtFeedModelList.toString();
+                _log.debug(consoleMessage);
                 for (GtfsRtFeedModel gtfsRtFeedModel : gtfsRtFeedModelList) {
                     GtfsRealtime.FeedMessage message = mGtfsRtFeedMap.get(gtfsRtFeedModel.getGtfsRtId());
                     if (header == null) {
@@ -237,9 +249,11 @@ public class BackgroundTask implements Runnable {
             long currentTimeMillis = System.currentTimeMillis();
             // Run validation rules
             for (FeedEntityValidator rule : mValidationRules) {
-                consoleOutput.append(validateEntity(currentTimeMillis, currentFeedMessage, previousFeedMessage, combinedFeed, gtfsData, gtfsMetadata, feedIteration, rule));
+                consoleOutput.append(validateEntity(currentTimeMillis, currentFeedMessage, previousFeedMessage,
+                        combinedFeed, gtfsData, gtfsMetadata, feedIteration, rule));
             }
-            consoleOutput.append("\nProcessed " + mCurrentGtfsRtFeed.getGtfsRtUrl() + " in " + getElapsedTimeString(getElapsedTime(startTimeNanos, System.nanoTime())));
+            consoleOutput.append("\nProcessed " + mCurrentGtfsRtFeed.getGtfsRtUrl() + " in "
+                    + getElapsedTimeString(getElapsedTime(startTimeNanos, System.nanoTime())));
             consoleOutput.append("\n---------------------");
             _log.info(consoleOutput.toString());
         } catch (Exception ex) {
@@ -247,24 +261,28 @@ public class BackgroundTask implements Runnable {
         }
     }
 
-    private StringBuffer validateEntity(long currentTimeMillis, GtfsRealtime.FeedMessage currentFeedMessage, GtfsRealtime.FeedMessage previousFeedMessage,
-                                        GtfsRealtime.FeedMessage combinedFeedMessage, GtfsMutableDao gtfsData, GtfsMetadata gtfsMetadata,
-                                        GtfsRtFeedIterationModel feedIteration, FeedEntityValidator feedEntityValidator) {
+    private StringBuffer validateEntity(long currentTimeMillis, GtfsRealtime.FeedMessage currentFeedMessage,
+            GtfsRealtime.FeedMessage previousFeedMessage,
+            GtfsRealtime.FeedMessage combinedFeedMessage, GtfsMutableDao gtfsData, GtfsMetadata gtfsMetadata,
+            GtfsRtFeedIterationModel feedIteration, FeedEntityValidator feedEntityValidator) {
         StringBuffer consoleLine = new StringBuffer();
         long startTimeNanos = System.nanoTime();
-        List<ErrorListHelperModel> errorLists = feedEntityValidator.validate(currentTimeMillis, gtfsData, gtfsMetadata, currentFeedMessage, previousFeedMessage, combinedFeedMessage);
-        consoleLine.append("\n" + feedEntityValidator.getClass().getSimpleName() + " - rule = " + getElapsedTimeString(getElapsedTime(startTimeNanos, System.nanoTime())));
+        List<ErrorListHelperModel> errorLists = feedEntityValidator.validate(currentTimeMillis, gtfsData, gtfsMetadata,
+                currentFeedMessage, previousFeedMessage, combinedFeedMessage);
+        consoleLine.append("\n" + feedEntityValidator.getClass().getSimpleName() + " - rule = "
+                + getElapsedTimeString(getElapsedTime(startTimeNanos, System.nanoTime())));
         if (errorLists != null) {
             startTimeNanos = System.nanoTime();
             for (ErrorListHelperModel errorList : errorLists) {
                 if (!errorList.getOccurrenceList().isEmpty()) {
-                    //Set iteration Id
+                    // Set iteration Id
                     errorList.getErrorMessage().setGtfsRtFeedIterationModel(feedIteration);
-                    //Save the captured errors to the database
+                    // Save the captured errors to the database
                     DBHelper.saveError(errorList);
                 }
             }
-            consoleLine.append(", database = " + getElapsedTimeString(getElapsedTime(startTimeNanos, System.nanoTime())));
+            consoleLine
+                    .append(", database = " + getElapsedTimeString(getElapsedTime(startTimeNanos, System.nanoTime())));
         }
         return consoleLine;
     }

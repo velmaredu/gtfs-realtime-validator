@@ -48,11 +48,10 @@ public class GTFSDB {
 
     public static Session initSessionBeginTrans() {
         Session session = null;
-        Transaction tx = null;
-        try{
+        try {
             session = HibernateUtil.getSessionFactory().openSession();
-            tx = session.beginTransaction();
-        }catch (Exception ex) {
+            session.beginTransaction();
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return session;
@@ -60,31 +59,33 @@ public class GTFSDB {
 
     /**
      * Closes a session opened for an UPDATE operation or single READ-ONLY operation
+     *
      * @param session session to be committed and closed
      */
     public static void commitAndCloseSession(Session session) {
         Transaction tx = null;
-        try{
+        try {
             session.flush();
             tx = session.getTransaction();
             tx.commit();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-            if(tx != null) tx.rollback();
+            if (tx != null)
+                tx.rollback();
         } finally {
-                if(session != null)
-                    session.close();
+            session.close();
         }
     }
 
     /**
      * Closes a session used for multiple READ-ONLY operations -
-     * see https://github.com/CUTR-at-USF/gtfs-realtime-validator/pull/135#discussion_r113005572.
+     * see
+     * https://github.com/CUTR-at-USF/gtfs-realtime-validator/pull/135#discussion_r113005572.
      *
      * @param session session to be closed
      */
     public static void closeSession(Session session) {
-        if(session != null) {
+        if (session != null) {
             session.close();
         }
     }

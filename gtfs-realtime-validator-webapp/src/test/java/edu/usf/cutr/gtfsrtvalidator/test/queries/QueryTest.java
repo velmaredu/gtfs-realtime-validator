@@ -40,7 +40,8 @@ public class QueryTest extends TestCase {
     private final String projectDir = System.getProperty("user.dir");
     private final String SQL_SCRIPT = projectDir + "/src/test/resources/testSQLScript.sql";
 
-    // GtfsRtId value should be same as what we insert into database in 'testSQLScript.sql' file
+    // GtfsRtId value should be same as what we insert into database in
+    // 'testSQLScript.sql' file
     private int gtfsRtId = -1;
     // This will set 'setFirstResult' parameter value to 0
     private int currentPage = 1;
@@ -58,8 +59,10 @@ public class QueryTest extends TestCase {
         gtfsFeedTest = new GtfsFeedTest();
         gtfsRtFeed = new GtfsRtFeed();
         /*
-         * Timestamp value is given 0 because the Timestamp values inserted into database using 'testSQLScript.sql'
-         * file are 1 and 2. So, value 0 ensures to retrieve records from database whose Timestamp values are > 0
+         * Timestamp value is given 0 because the Timestamp values inserted into
+         * database using 'testSQLScript.sql'
+         * file are 1 and 2. So, value 0 ensures to retrieve records from database whose
+         * Timestamp values are > 0
          */
         gtfsRtFeed.currentTimestamp = 0;
         gtfsFeedTest.setUp();
@@ -92,10 +95,13 @@ public class QueryTest extends TestCase {
 
         /*
          * Form the 'staticResult' that needs to be compared with the query results
-         * We get query results in descending order of iterationIds and ascending order of error Ids
-         * ViewErrorSummaryModel values are inserted into 'staticResult' in the same order as we get the query results
+         * We get query results in descending order of iterationIds and ascending order
+         * of error Ids
+         * ViewErrorSummaryModel values are inserted into 'staticResult' in the same
+         * order as we get the query results
          * See 'testSQLScript.sql' file for database records
-         * Order by errorId ASC will produce results in the order of ids 'E002', 'W001', 'W002', and are added in 'staticResult' in that order
+         * Order by errorId ASC will produce results in the order of ids 'E002', 'W001',
+         * 'W002', and are added in 'staticResult' in that order
          */
         viewErrorSummaryModel.setGtfsRtId(gtfsRtId);
         viewErrorSummaryModel.setLastTime(2);
@@ -106,7 +112,8 @@ public class QueryTest extends TestCase {
         viewErrorSummaryModel.setTitle("Unsorted stop_sequence");
         viewErrorSummaryModel.setLastIterationId(-1);
         viewErrorSummaryModel.setLastRowId(2);
-        viewErrorSummaryModel.setFormattedTimestamp(gtfsRtFeed.getDateFormat(viewErrorSummaryModel.getLastFeedTime(), gtfsRtId));
+        viewErrorSummaryModel
+                .setFormattedTimestamp(gtfsRtFeed.getDateFormat(viewErrorSummaryModel.getLastFeedTime(), gtfsRtId));
         viewErrorSummaryModel.setTimeZone(GtfsRtFeed.agencyTimezone);
 
         staticResult.add(viewErrorSummaryModel);
@@ -121,7 +128,8 @@ public class QueryTest extends TestCase {
         viewErrorSummaryModel.setTitle("Timestamp not populated");
         viewErrorSummaryModel.setLastIterationId(-1);
         viewErrorSummaryModel.setLastRowId(2);
-        viewErrorSummaryModel.setFormattedTimestamp(gtfsRtFeed.getDateFormat(viewErrorSummaryModel.getLastFeedTime(), gtfsRtId));
+        viewErrorSummaryModel
+                .setFormattedTimestamp(gtfsRtFeed.getDateFormat(viewErrorSummaryModel.getLastFeedTime(), gtfsRtId));
         viewErrorSummaryModel.setTimeZone(GtfsRtFeed.agencyTimezone);
 
         staticResult.add(viewErrorSummaryModel);
@@ -136,14 +144,16 @@ public class QueryTest extends TestCase {
         viewErrorSummaryModel.setTitle("Vehicle_id not populated");
         viewErrorSummaryModel.setLastIterationId(-1);
         viewErrorSummaryModel.setLastRowId(2);
-        viewErrorSummaryModel.setFormattedTimestamp(gtfsRtFeed.getDateFormat(viewErrorSummaryModel.getLastFeedTime(), gtfsRtId));
+        viewErrorSummaryModel
+                .setFormattedTimestamp(gtfsRtFeed.getDateFormat(viewErrorSummaryModel.getLastFeedTime(), gtfsRtId));
         viewErrorSummaryModel.setTimeZone(GtfsRtFeed.agencyTimezone);
 
         staticResult.add(viewErrorSummaryModel);
 
         // We need to retrieve maximum of 3 records from database
         rowsPerPage = 3;
-        mergeMonitorData = (MergeMonitorData) gtfsRtFeed.getMonitorData(gtfsRtId, currentPage, rowsPerPage, "", currentPage, rowsPerPage, 0, 0).getEntity();
+        mergeMonitorData = (MergeMonitorData) gtfsRtFeed
+                .getMonitorData(gtfsRtId, currentPage, rowsPerPage, "", currentPage, rowsPerPage, 0, 0).getEntity();
 
         assertEquals(staticResult, mergeMonitorData.getViewErrorSummaryModelList());
     }
@@ -155,12 +165,17 @@ public class QueryTest extends TestCase {
         ViewErrorLogModel viewErrorLogModel = new ViewErrorLogModel();
 
         /*
-         * Form the 'staticResult' that needs to be compared with the query results/response.
-         * We get query results in descending order of iterationIds and ascending order of error Ids.
-         * ViewErrorSummaryModel values are inserted into 'staticResult' in the same order as we get the query results.
+         * Form the 'staticResult' that needs to be compared with the query
+         * results/response.
+         * We get query results in descending order of iterationIds and ascending order
+         * of error Ids.
+         * ViewErrorSummaryModel values are inserted into 'staticResult' in the same
+         * order as we get the query results.
          * See 'testSQLScript.sql' file for database records.
-         * Order by iterationIds DESC, errorId ASC will produce results in the order of ids 'E002', 'W001', 'W002'
-         *  with decreasing order of iterationIds, and are added in 'staticResult' in that same order.
+         * Order by iterationIds DESC, errorId ASC will produce results in the order of
+         * ids 'E002', 'W001', 'W002'
+         * with decreasing order of iterationIds, and are added in 'staticResult' in
+         * that same order.
          */
         viewErrorLogModel.setRowId(2);
         viewErrorLogModel.setGtfsRtId(gtfsRtId);
@@ -247,7 +262,8 @@ public class QueryTest extends TestCase {
 
         // We need to retrieve maximum of 3 records from database
         rowsPerPage = 6;
-        mergeMonitorData = (MergeMonitorData) gtfsRtFeed.getMonitorData(gtfsRtId, currentPage, rowsPerPage, "", currentPage, rowsPerPage, 0, 0)
+        mergeMonitorData = (MergeMonitorData) gtfsRtFeed
+                .getMonitorData(gtfsRtId, currentPage, rowsPerPage, "", currentPage, rowsPerPage, 0, 0)
                 .getEntity();
 
         assertEquals(staticResult, mergeMonitorData.getViewErrorLogModelList());
