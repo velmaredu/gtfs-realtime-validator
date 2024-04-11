@@ -17,19 +17,21 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedNativeQuery;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @Entity
-@NamedNativeQuery(name = "feedUniqueResponseCount", query = "SELECT count(*) AS uniqueFeedCount " +
-        "FROM GtfsRtFeedIteration " +
-        "WHERE (rtFeedID = :gtfsRtId " +
-        "AND IterationTimestamp >= :sessionStartTime AND IterationTimestamp <= :sessionEndTime " +
-        "AND feedProtobuf IS NOT NULL) ", resultClass = ViewFeedUniqueResponseCount.class)
+@NamedNativeQuery(name = "feedUniqueResponseCount",
+        query = "SELECT count(*) AS uniqueFeedCount " +
+                "FROM GtfsRtFeedIteration " +
+                "WHERE (rtFeedID = :gtfsRtId " +
+                    "AND IterationTimestamp >= :sessionStartTime AND IterationTimestamp <= :sessionEndTime " +
+                    "AND feedProtobuf IS NOT NULL) ",
+        resultClass = ViewFeedUniqueResponseCount.class)
 public class ViewFeedUniqueResponseCount {
 
     @Id

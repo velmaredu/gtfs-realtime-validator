@@ -17,29 +17,31 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedNativeQuery;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @Entity
-@NamedNativeQuery(name = "feedErrorCount", query = "SELECT  Error.errorID AS id, errorCount.totalCount " +
-        "FROM Error " +
-        "INNER JOIN " +
-        "(SELECT errorID, count(*) AS totalCount, " +
-        "MAX(IterationTimestamp)  AS IterationTimestamp, " +
-        "MAX(IterationID) AS lastIterationId " +
-        "FROM MessageLog " +
-        "INNER JOIN " +
-        "(SELECT IterationID, IterationTimestamp " +
-        "FROM GtfsRtFeedIteration " +
-        "WHERE rtFeedID = :gtfsRtId) GtfsRtFeedIDIteration " +
-        "ON MessageLog.iterationID = GtfsRtFeedIDIteration.IterationID " +
-        "AND IterationTimestamp >= :sessionStartTime AND IterationTimestamp <= :sessionEndTime " +
-        "GROUP BY errorID) errorCount " +
-        "ON Error.errorID = errorCount.errorID ", resultClass = ViewGtfsRtFeedErrorCountModel.class)
+@NamedNativeQuery(name = "feedErrorCount",
+        query = "SELECT  Error.errorID AS id, errorCount.totalCount " +
+                "FROM Error " +
+                "INNER JOIN " +
+                "(SELECT errorID, count(*) AS totalCount, " +
+                "MAX(IterationTimestamp)  AS IterationTimestamp, " +
+                "MAX(IterationID) AS lastIterationId " +
+                "FROM MessageLog " +
+                "INNER JOIN " +
+                "(SELECT IterationID, IterationTimestamp " +
+                "FROM GtfsRtFeedIteration " +
+                "WHERE rtFeedID = :gtfsRtId) GtfsRtFeedIDIteration " +
+                "ON MessageLog.iterationID = GtfsRtFeedIDIteration.IterationID " +
+                    "AND IterationTimestamp >= :sessionStartTime AND IterationTimestamp <= :sessionEndTime " +
+                "GROUP BY errorID) errorCount " +
+                "ON Error.errorID = errorCount.errorID ",
+        resultClass = ViewGtfsRtFeedErrorCountModel.class)
 public class ViewGtfsRtFeedErrorCountModel {
 
     @Id

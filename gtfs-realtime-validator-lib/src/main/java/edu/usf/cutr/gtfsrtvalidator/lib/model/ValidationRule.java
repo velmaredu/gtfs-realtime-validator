@@ -19,12 +19,11 @@ package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
 import org.hibernate.annotations.Type;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import org.hibernate.annotations.Type;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
@@ -33,24 +32,24 @@ import java.io.Serializable;
 public class ValidationRule implements Serializable {
 
     @Id
-    @Column(name = "errorID")
+    @Column(name="errorID")
     private String errorId;
 
     @Column(name = "severity")
     private String severity;
 
     @Column(name = "title")
+    @Type(type = "text")
     private String title;
 
-    @Column(name = "errorDescription")
+    @Column(name="errorDescription")
+    @Type(type = "text")
     private String errorDescription;
 
     /**
-     * Text used to help describe an occurrence of this warning/error following the
-     * specific elements that it relates to.
+     * Text used to help describe an occurrence of this warning/error following the specific elements that it relates to.
      * <p>
-     * For example, for E004 "GTFS-rt trip_ids must appear in GTFS data", the error
-     * message we want to show the user could be
+     * For example, for E004 "GTFS-rt trip_ids must appear in GTFS data", the error message we want to show the user could be
      * * "trip_id 6234 doesn't appear in the GTFS data"
      * <p>
      * For this message, the occurenceSuffix would be:
@@ -62,13 +61,13 @@ public class ValidationRule implements Serializable {
      * @see OccurrenceModel
      */
     @Column(name = "occurrenceSuffix")
+    @Type(type = "text")
     private String occurrenceSuffix;
 
     public ValidationRule() {
     }
 
-    public ValidationRule(String errorId, String severity, String title, String errorDescription,
-            String occurrenceSuffix) {
+    public ValidationRule(String errorId, String severity, String title, String errorDescription, String occurrenceSuffix) {
         this.setErrorId(errorId);
         this.setSeverity(severity);
         this.setTitle(title);

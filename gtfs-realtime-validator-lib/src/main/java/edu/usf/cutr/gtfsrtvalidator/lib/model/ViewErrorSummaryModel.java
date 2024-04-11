@@ -17,68 +17,69 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import jakarta.persistence.*;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
 @Entity
-@NamedNativeQuery(name = "ErrorSummaryByrtfeedID", query = "SELECT :gtfsRtId1 AS rtFeedID, errorID AS id, " +
-        "title, severity, totalCount, lastTime, " +
-        "lastFeedTime, lastIterationId, lastRowId " +
-        "FROM Error " +
-        "INNER JOIN " +
-        "(SELECT errorID, MAX(rowIdentifier) AS lastRowId, " +
-        "count(*) AS totalCount, MAX(iterationId) AS lastIterationId, " +
-        "MAX(iterationTimestamp) AS lastTime, " +
-        "MAX(feedTimestamp) AS lastFeedTime " +
-        "FROM MessageLog " +
-        "INNER JOIN " +
-        // Retrieve rowIdentifier for each of unique (iterationId, iterationTimestamp)
-        "(SELECT ROWNUM() AS rowIdentifier, " +
-        "IterationID AS iterationId, " +
-        "IterationTimestamp AS iterationTimestamp, feedTimestamp " +
-        "FROM " +
-        // Retrieve unique IterationID and IterationTimestamp, so that we can get ROWNUM
-        // in sequence
-        "(SELECT DISTINCT errorLog.IterationID, errorLog.IterationTimestamp, " +
-        "errorLog.feedTimestamp " +
-        "FROM " +
-        "(SELECT GtfsRtFeedIDIteration.IterationID, " +
-        "GtfsRtFeedIDIteration.IterationTimestamp, " +
-        "GtfsRtFeedIDIteration.feedTimestamp " +
-        "FROM MessageLog " +
-        "INNER JOIN " +
-        "(SELECT  IterationID, IterationTimestamp, feedTimestamp " +
-        "FROM GtfsRtFeedIteration " +
-        "WHERE rtFeedID = :gtfsRtId2) GtfsRtFeedIDIteration " +
-        "ON MessageLog.iterationID = GtfsRtFeedIDIteration.IterationID " +
-        "AND IterationTimestamp >= :sessionStartTime AND IterationTimestamp <= :sessionEndTime " +
-        ") errorLog " +
-        "ORDER BY iterationId " +
-        ") " +
-        ") UniqueRowIdResult " +
-        "ON MessageLog.iterationID = UniqueRowIdResult.iterationId " +
-        "GROUP BY errorId " +
-        ") ErrorCount " +
-        "ON Error.errorID = ErrorCount.errorId " +
-        "ORDER BY Error.errorID ", resultClass = ViewErrorSummaryModel.class)
-public class ViewErrorSummaryModel implements Serializable {
+@NamedNativeQuery(name = "ErrorSummaryByrtfeedID",
+    query = "SELECT :gtfsRtId1 AS rtFeedID, errorID AS id, " +
+                "title, severity, totalCount, lastTime, " +
+                "lastFeedTime, lastIterationId, lastRowId " +
+            "FROM Error " +
+                "INNER JOIN " +
+                "(SELECT errorID, MAX(rowIdentifier) AS lastRowId, " +
+                    "count(*) AS totalCount, MAX(iterationId) AS lastIterationId, " +
+                    "MAX(iterationTimestamp) AS lastTime, " +
+                    "MAX(feedTimestamp) AS lastFeedTime " +
+                "FROM MessageLog " +
+                    "INNER JOIN " +
+                    // Retrieve rowIdentifier for each of unique (iterationId, iterationTimestamp)
+                    "(SELECT ROWNUM() AS rowIdentifier, " +
+                        "IterationID AS iterationId, " +
+                        "IterationTimestamp AS iterationTimestamp, feedTimestamp " +
+                    "FROM " +
+                        // Retrieve unique IterationID and IterationTimestamp, so that we can get ROWNUM in sequence
+                        "(SELECT DISTINCT errorLog.IterationID, errorLog.IterationTimestamp, " +
+                            "errorLog.feedTimestamp " +
+                        "FROM " +
+                            "(SELECT GtfsRtFeedIDIteration.IterationID, " +
+                                "GtfsRtFeedIDIteration.IterationTimestamp, " +
+                                "GtfsRtFeedIDIteration.feedTimestamp " +
+                            "FROM MessageLog " +
+                                "INNER JOIN " +
+                                "(SELECT  IterationID, IterationTimestamp, feedTimestamp " +
+                                "FROM GtfsRtFeedIteration " +
+                                "WHERE rtFeedID = :gtfsRtId2) GtfsRtFeedIDIteration " +
+                            "ON MessageLog.iterationID = GtfsRtFeedIDIteration.IterationID " +
+                                "AND IterationTimestamp >= :sessionStartTime AND IterationTimestamp <= :sessionEndTime " +
+                            ") errorLog " +
+                            "ORDER BY iterationId " +
+                        ") " +
+                    ") UniqueRowIdResult " +
+                "ON MessageLog.iterationID = UniqueRowIdResult.iterationId " +
+                "GROUP BY errorId " +
+                ") ErrorCount " +
+            "ON Error.errorID = ErrorCount.errorId " +
+            "ORDER BY Error.errorID ",
+        resultClass = ViewErrorSummaryModel.class)
+public class ViewErrorSummaryModel implements Serializable{
 
-    @Column(name = "rtFeedID")
+    @Column(name="rtFeedID")
     private int gtfsRtId;
-    @Column(name = "lastTime")
+    @Column(name="lastTime")
     private long lastTime;
     @Column(name = "lastFeedTime")
     private long lastFeedTime;
-    @Column(name = "totalCount")
+    @Column(name="totalCount")
     private int count; // total number of error or warning count
     @Id
     @Column(name = "id")
     private String id; // error or warning ID
     @Column(name = "severity")
     private String severity;
-    @Column(name = "title")
+    @Column (name = "title")
     private String title;
     @Column(name = "lastIterationId")
     private int lastIterationId;
@@ -148,7 +149,6 @@ public class ViewErrorSummaryModel implements Serializable {
     public void setFormattedTimestamp(String formattedTimestamp) {
         this.formattedTimestamp = formattedTimestamp;
     }
-
     public String getFormattedTimestamp() {
         return formattedTimestamp;
     }

@@ -17,23 +17,22 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import jakarta.persistence.*;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
 @Entity
-@Table(name = "GtfsFeedIteration")
+@Table(name="GtfsFeedIteration")
 public class GtfsFeedIterationModel implements Serializable {
 
-    public GtfsFeedIterationModel() {
-    }
+    public GtfsFeedIterationModel() {}
 
     @Id
-    @Column(name = "IterationID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="IterationID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int IterationId;
-    @Column(name = "IterationTimestamp")
+    @Column(name="IterationTimestamp")
     private long timeStamp;
     @ManyToOne
     @JoinColumn(name = "feedID")

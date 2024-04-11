@@ -17,8 +17,8 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import jakarta.persistence.*;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
@@ -27,7 +27,7 @@ import java.io.Serializable;
 public class SessionModel implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "sessionId")
     private int sessionId;
 
@@ -62,8 +62,7 @@ public class SessionModel implements Serializable {
     @Transient
     private String endTimeFormat;
 
-    // Holds the elapsed time(in Xh Xm Xs format) from start of a session to end of
-    // a session
+    // Holds the elapsed time(in Xh Xm Xs format) from start of a session to end of a session
     @Transient
     private String totalTime;
 

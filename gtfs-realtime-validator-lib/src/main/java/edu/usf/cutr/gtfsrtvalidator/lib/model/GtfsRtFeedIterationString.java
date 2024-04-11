@@ -21,8 +21,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.transit.realtime.GtfsRealtime;
 import com.googlecode.protobuf.format.JsonFormat;
 
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class GtfsRtFeedIterationString {
@@ -80,9 +80,8 @@ public class GtfsRtFeedIterationString {
 
         try {
             GtfsRealtime.FeedMessage feedMessage = GtfsRealtime.FeedMessage.parseFrom(feedprotobuf);
-            JsonFormat jsonFormat = new JsonFormat();
-            s = jsonFormat.printToString(feedMessage);
-            s = s.replace('\\', ' ');
+            s = JsonFormat.printToString(feedMessage);
+            s.replace('\\', ' ');
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }

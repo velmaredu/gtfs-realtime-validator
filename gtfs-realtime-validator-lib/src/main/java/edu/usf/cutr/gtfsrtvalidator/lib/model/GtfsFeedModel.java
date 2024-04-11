@@ -17,35 +17,34 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import jakarta.persistence.*;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
 @Entity
-@Table(name = "GtfsFeed")
+@Table(name = "GtfsFeed") 
 public class GtfsFeedModel implements Serializable {
 
-    @Column(name = "feedUrl")
+    @Column(name="feedUrl")
     private String gtfsUrl;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "feedID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="feedID")
     private int feedId;
-    @Column(name = "downloadTimestamp")
+    @Column(name="downloadTimestamp")
     private long startTime;
-    @Column(name = "fileLocation")
+    @Column(name="fileLocation")
     private String feedLocation;
     @Column(name = "agency")
     private String agency;
-    @Column(name = "fileChecksum")
+    @Column(name="fileChecksum")
     @Lob
     private byte[] checksum;
     @Column(name = "errorCount")
     private int errorCount;
 
-    public GtfsFeedModel() {
-    }
+    public GtfsFeedModel(){}
 
     public String getGtfsUrl() {
         return gtfsUrl;
@@ -66,7 +65,7 @@ public class GtfsFeedModel implements Serializable {
     public long getStartTime() {
         return startTime;
     }
-
+    
     public byte[] getChecksum() {
         return checksum;
     }
@@ -115,3 +114,4 @@ public class GtfsFeedModel implements Serializable {
                 '}';
     }
 }
+

@@ -17,15 +17,14 @@
 
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class ErrorMessageModel {
     private String title;
     private String message;
 
-    public ErrorMessageModel() {
-    }
+    public ErrorMessageModel(){}
 
     public ErrorMessageModel(String errorMessage) {
         setMessage(errorMessage);

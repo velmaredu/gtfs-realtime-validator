@@ -18,17 +18,19 @@
 package edu.usf.cutr.gtfsrtvalidator.lib.model;
 
 import javax.annotation.concurrent.Immutable;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedNativeQuery;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
 @Entity
 @Immutable
-@NamedNativeQuery(name = "GtfsErrorCountByID", query = "SELECT * FROM (GtfsMessageLog JOIN GtfsOccurrence ON GtfsMessageLog.messageID = GtfsOccurrence.messageID JOIN Error ON Error.errorID = GtfsMessageLog.errorID)", resultClass = ViewGtfsErrorCountModel.class)
+@NamedNativeQuery(name = "GtfsErrorCountByID", 
+    query="SELECT * FROM (GtfsMessageLog JOIN GtfsOccurrence ON GtfsMessageLog.messageID = GtfsOccurrence.messageID JOIN Error ON Error.errorID = GtfsMessageLog.errorID)",
+    resultClass = ViewGtfsErrorCountModel.class)
 public class ViewGtfsErrorCountModel implements Serializable {
     public static final Integer MESSAGE_ID = 0;
     public static final Integer ITERATION_ID = 0;
@@ -39,22 +41,22 @@ public class ViewGtfsErrorCountModel implements Serializable {
     public static final String DOWNLOAD_TIME = "downloadTimestamp";
     public static final String ERROR_COUNT = "errorCount";
 
-    @Column(name = "messageID")
+    @Column(name="messageID")
     private int messageId;
     @Id
-    @Column(name = "iterationID")
+    @Column(name="iterationID")
     private int iterationId;
-    @Column(name = "errorID")
+    @Column(name="errorID")
     private String errorId;
-    @Column(name = "errorDescription")
+    @Column(name="errorDescription")
     private String errorDesc;
-    @Column(name = "feedURL")
+    @Column(name="feedURL")
     private String feedUrl;
-    @Column(name = "fileLocation")
+    @Column(name="fileLocation")
     private String fileLocation;
-    @Column(name = "downloadTimestamp")
+    @Column(name="downloadTimestamp")
     private long downloadTime;
-    @Column(name = "errorCount")
+    @Column(name="errorCount")
     private int errorCount;
 
     public int getMessageId() {
